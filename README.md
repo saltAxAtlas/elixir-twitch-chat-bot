@@ -1,7 +1,7 @@
 # Twitch Chat Bot [Elixir]
 A general purpose Twitch chat bot written in Elixir.
 
-##TODO:
+## TODO:
 -   [ ] ADD COMMANDS
 
 ## Installation
