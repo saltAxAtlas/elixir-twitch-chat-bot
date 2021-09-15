@@ -1,0 +1,11 @@
+/_build/
+/.elixir_ls/
+/cover/
+/deps/
+/doc/
+/.fetch
+erl_crash.dump
+*.ez
+twitch_chat_bot-*.tar
+/tmp/
+/config/config.exs
