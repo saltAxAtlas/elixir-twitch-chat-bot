@@ -2,11 +2,18 @@
 A general purpose Twitch chat bot written in Elixir.
 
 ## TODO:
--   [ ] Words on Stream Command
--   [ ] Says hi to GF when she messages in chat
--   [ ] GIF command
+-   [X] Words on Stream Command
+    - [ ] Account for Hidden Letters
+    - [ ] Account for Fake Letters
+-   [X] Welcome GF
+-   [ ] Random GIF
 -   [ ] Counters
--   [ ] `I'm New` auto counter
+    - [ ] Add Counter
+    - [ ] Remove Counter
+    - [ ] Display Counter Value
+-   [ ] Auto Count `I'm New` Redemptions
+-   [ ] Command List
+-   [ ] Help Command
 
 ## Installation
 -   Run `mix deps.get`

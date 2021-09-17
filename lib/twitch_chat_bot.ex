@@ -1,19 +1,20 @@
 defmodule TwitchChatBot do
-    use Application
-    @moduledoc """
-    Documentation for `TwitchChatBot`.
-    """
+  use Application
 
-    @impl true
-    def start(_type, _args) do
-        {:ok, client} = ExIRC.start_link!
+  @moduledoc """
+  Documentation for `TwitchChatBot`.
+  """
 
-        children = [
-            {ConnectionHandler, client},
-            {LoginHandler, [client, [Application.get_env(:twitch_chat_bot, :channel_name)]]}
-        ]
+  @impl true
+  def start(_type, _args) do
+    {:ok, client} = ExIRC.start_link!()
 
-        opts = [strategy: :one_for_one, name: TwitchChatBot.Supervisor]
-        Supervisor.start_link(children, opts)
-    end
+    children = [
+      {ConnectionHandler, client},
+      {LoginHandler, [client, [Application.get_env(:twitch_chat_bot, :channel_name)]]}
+    ]
+
+    opts = [strategy: :one_for_one, name: TwitchChatBot.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 end
