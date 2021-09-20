@@ -14,6 +14,7 @@ A general purpose Twitch chat bot written in Elixir.
 -   [ ] Auto Count `I'm New` Redemptions
 -   [ ] Command List
 -   [ ] Help Command
+-   [X] Change Bot Color
 
 ## Installation
 -   Run `mix deps.get`

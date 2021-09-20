@@ -143,11 +143,14 @@ defmodule ConnectionHandler do
           state.client,
           :privmsg,
           channel,
-          msg_list |> Enum.drop(1) |> Enum.join(" ") |> String.split("/") |> Enum.join(" ")
+          msg_list |> Enum.drop(1) |> Enum.join(" ") |> String.replace(~r/[\/.]/, "")
         )
 
       "wos" ->
         wos_command(msg_list, channel, state)
+
+      "color" ->
+        color_command(msg_list, channel, state)
 
       "help" ->
         ExIRC.Client.msg(state.client, :privmsg, channel, "NO.")
@@ -187,6 +190,11 @@ defmodule ConnectionHandler do
   end
 
   defp wos_command(_msg_list, _channel, state) do
+    {:noreply, state}
+  end
+
+  defp color_command(msg_list, channel, state) do
+    ExIRC.Client.msg(state.client, :privmsg, channel, "/color #{msg_list |> List.last()}")
     {:noreply, state}
   end
 end
