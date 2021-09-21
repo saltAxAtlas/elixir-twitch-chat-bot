@@ -15,14 +15,16 @@ defmodule TwitchChatBot.MixProject do
     [
       mod: {TwitchChatBot, []},
       applications: [:exirc],
-      extra_applications: [:logger, :multiset]
+      extra_applications: [:logger, :multiset, :httpoison, :poison]
     ]
   end
 
   defp deps do
     [
       {:exirc, "~> 2.0.0"},
-      {:multiset, "~> 0.0.4"}
+      {:multiset, "~> 0.0.4"},
+      {:httpoison, "~> 1.8"},
+      {:poison, "~> 5.0"}
     ]
   end
 end
