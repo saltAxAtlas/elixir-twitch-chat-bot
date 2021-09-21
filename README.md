@@ -7,6 +7,8 @@ A general purpose Twitch chat bot written in Elixir.
     - [ ] Account for Fake Letters
 -   [X] Welcome GF
 -   [ ] Random GIF
+    - [X] Trending Page
+    - [ ] Search
 -   [ ] Counters
     - [ ] Add Counter
     - [ ] Remove Counter
@@ -19,4 +21,4 @@ A general purpose Twitch chat bot written in Elixir.
 ## Installation
 -   Run `mix deps.get`
 -   Replace information in `example_config.exs` -> Rename to `config.exs`
--   Run `mix compile && iex -S mix`
+-   Run `iex -S mix`
