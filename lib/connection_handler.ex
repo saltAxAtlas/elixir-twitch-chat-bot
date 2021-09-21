@@ -161,7 +161,7 @@ defmodule ConnectionHandler do
   end
 
   defp find_words(dictionary, chars, len) do
-    test = String.downcase(chars)
+    search_letters = String.downcase(chars)
 
     dictionary
     |> Enum.filter(fn x ->
@@ -170,7 +170,7 @@ defmodule ConnectionHandler do
           x
           |> String.graphemes()
           |> Multiset.new(),
-          test
+          search_letters
           |> String.graphemes()
           |> Multiset.new()
         )
