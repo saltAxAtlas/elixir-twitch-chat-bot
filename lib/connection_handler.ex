@@ -10,7 +10,13 @@ defmodule ConnectionHandler do
               name: "",
               client: nil,
               prefix: "%",
-              dictionary: nil
+              dictionary: nil,
+              # Implement functionality for counters
+              counter_table: nil,
+              gif_api_key: Application.get_env(:twitch_chat_bot, :giphy_api_key),
+              # requires api_key & q (set limit to 50)
+              gif_search_endpoint: "api.giphy.com/v1/gifs/search",
+              gif_trending_endpoint: "api.giphy.com/v1/gifs/trending"
   end
 
   def start_link(client, state \\ %State{}) do
@@ -31,6 +37,8 @@ defmodule ConnectionHandler do
       |> Enum.map(fn x -> String.downcase(x) end)
 
     state = Map.put(state, :dictionary, dictionary)
+
+    # state = Map.put(state, :counter_table, :dets.open_file(:disk_storage, [type: :set])) # Needs testing
     {:noreply, state}
   end
 
@@ -155,6 +163,9 @@ defmodule ConnectionHandler do
       "help" ->
         ExIRC.Client.msg(state.client, :privmsg, channel, "NO.")
 
+      "tgif" ->
+        gif_trending_command(channel, state)
+
       _ ->
         {:noreply, state}
     end
@@ -195,6 +206,25 @@ defmodule ConnectionHandler do
 
   defp color_command(msg_list, channel, state) do
     ExIRC.Client.msg(state.client, :privmsg, channel, "/color #{msg_list |> List.last()}")
+    {:noreply, state}
+  end
+
+  defp gif_trending_command(channel, state) do
+    {:ok, response} =
+      HTTPoison.get(state.gif_trending_endpoint, [],
+        params: [api_key: state.gif_api_key, limit: 50]
+      )
+
+    output =
+      response.body
+      |> Poison.decode!()
+      |> Map.fetch("data")
+      |> elem(1)
+      |> Enum.map(fn x -> Map.fetch(x, "embed_url") |> elem(1) end)
+      |> Enum.shuffle()
+      |> List.first()
+
+    ExIRC.Client.msg(state.client, :privmsg, channel, "#{output}")
     {:noreply, state}
   end
 end
