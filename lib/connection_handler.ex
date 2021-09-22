@@ -95,7 +95,7 @@ defmodule ConnectionHandler do
 
   def handle_info({:received, message, sender, channel}, state) do
     if sender.nick == "baethatisnotangry" do
-      ExIRC.Client.msg(state.client, :privmsg, channel, "Hey there GF @#{sender.nick}")
+      ExIRC.Client.msg(state.client, :privmsg, channel, "Hey there GF!")
       {:noreply, state}
     else
       if String.first(message) == state.prefix && sender.nick != state.nick do
@@ -121,12 +121,12 @@ defmodule ConnectionHandler do
   end
 
   def handle_info({:names_list, channel, names}, state) do
-    debug("Name list for channel #{channel}: #{names}")
+    # debug("Name list for channel #{channel}: #{names}")
     {:noreply, state}
   end
 
   def handle_info({:unrecognized, _value, ircmsg}, state) do
-    debug("Unrecognized message: #{ircmsg.cmd}")
+    # debug("Unrecognized message: #{ircmsg.cmd}")
     # IO.inspect(ircmsg)
     {:noreply, state}
   end
