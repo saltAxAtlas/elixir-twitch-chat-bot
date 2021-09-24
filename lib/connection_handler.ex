@@ -94,16 +94,11 @@ defmodule ConnectionHandler do
   end
 
   def handle_info({:received, message, sender, channel}, state) do
-    if sender.nick == "baethatisnotangry" do
-      ExIRC.Client.msg(state.client, :privmsg, channel, "Hey there GF!")
+    if String.first(message) == state.prefix && sender.nick != state.nick do
+      handle_command(message, channel, state)
       {:noreply, state}
     else
-      if String.first(message) == state.prefix && sender.nick != state.nick do
-        handle_command(message, channel, state)
-        {:noreply, state}
-      else
-        {:noreply, state}
-      end
+      {:noreply, state}
     end
   end
 
@@ -120,12 +115,12 @@ defmodule ConnectionHandler do
     {:noreply, state}
   end
 
-  def handle_info({:names_list, channel, names}, state) do
+  def handle_info({:names_list, _channel, _names}, state) do
     # debug("Name list for channel #{channel}: #{names}")
     {:noreply, state}
   end
 
-  def handle_info({:unrecognized, _value, ircmsg}, state) do
+  def handle_info({:unrecognized, _value, _ircmsg}, state) do
     # debug("Unrecognized message: #{ircmsg.cmd}")
     # IO.inspect(ircmsg)
     {:noreply, state}
@@ -146,6 +141,12 @@ defmodule ConnectionHandler do
     msg_list = msg |> String.split()
 
     case msg_list |> List.first(nil) |> String.slice(1..-1) do
+      "help" ->
+        help_command(msg_list, channel, state)
+
+      "commands" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "help, commands, say, tgif, wos, color")
+
       "say" ->
         ExIRC.Client.msg(
           state.client,
@@ -154,17 +155,17 @@ defmodule ConnectionHandler do
           msg_list |> Enum.drop(1) |> Enum.join(" ") |> String.replace(~r/[\/.]/, "")
         )
 
+      "tgif" ->
+        gif_trending_command(channel, state)
+
+      "gif" ->
+        gif_search_command(msg_list, channel, state)
+
       "wos" ->
         wos_command(msg_list, channel, state)
 
       "color" ->
         color_command(msg_list, channel, state)
-
-      "help" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "NO.")
-
-      "tgif" ->
-        gif_trending_command(channel, state)
 
       _ ->
         {:noreply, state}
@@ -206,6 +207,7 @@ defmodule ConnectionHandler do
 
   defp color_command(msg_list, channel, state) do
     ExIRC.Client.msg(state.client, :privmsg, channel, "/color #{msg_list |> List.last()}")
+    ExIRC.Client.msg(state.client, :privmsg, channel, "Color updated to: #{msg_list |> List.last()}")
     {:noreply, state}
   end
 
@@ -226,5 +228,55 @@ defmodule ConnectionHandler do
 
     ExIRC.Client.msg(state.client, :privmsg, channel, "#{output}")
     {:noreply, state}
+  end
+
+  defp gif_search_command(msg_list, channel, state) do
+    {:ok, response} =
+      HTTPoison.get(state.gif_search_endpoint, [],
+        params: [api_key: state.gif_api_key, q: "#{msg_list |> Enum.drop(1) |> Enum.join(" ")}", limit: 50]
+      )
+
+    output =
+      response.body
+      |> Poison.decode!()
+      |> Map.fetch("data")
+      |> elem(1)
+      |> Enum.map(fn x -> Map.fetch(x, "embed_url") |> elem(1) end)
+      |> Enum.shuffle()
+      |> List.first()
+
+    ExIRC.Client.msg(state.client, :privmsg, channel, "#{output}")
+    {:noreply, state}
+  end
+
+  defp help_command(msg_list, channel, state) do
+    case Enum.at(msg_list, 1) do
+      "help" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "...")
+
+      "commands" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a list of commands")
+
+      "say" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Says what you say")
+
+      "tgif" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a link to a trending gif")
+
+      "gif" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a link to a searched gif")
+
+      "wos" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a list of words matching the character inputs")
+
+      "color" ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%color {Blue, Coral, DodgerBlue, SpringGreen, YellowGreen, Green, OrangeRed, Red, GoldenRod, HotPink, CadetBlue, SeaGreen, Chocolate, BlueViolet, Firebrick}")
+
+      nil ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Format %help {command name}")
+
+      _ ->
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Not a valid command")
+    end
   end
 end

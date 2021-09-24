@@ -5,18 +5,23 @@ A general purpose Twitch chat bot written in Elixir.
 -   [X] Words on Stream Command
     - [ ] Account for Hidden Letters
     - [ ] Account for Fake Letters
--   [X] Welcome GF
--   [ ] Random GIF
+-   [X] Random GIF
     - [X] Trending Page
-    - [ ] Search
+    - [X] Search
 -   [ ] Counters
     - [ ] Add Counter
     - [ ] Remove Counter
     - [ ] Display Counter Value
 -   [ ] Auto Count `I'm New` Redemptions
--   [ ] Command List
--   [ ] Help Command
+-   [ ] Handle New Sub 
+-   [ ] Handle Cheer
+-   [ ] Handle New Follower
+-   [ ] Handle `Skip Song` Redemption (PUBSUB + Spotify API)
+-   [X] Command List
+-   [X] Help Command
 -   [X] Change Bot Color
+-   [ ] Spotify API (Get Current Song) -> Streamlabs API (Update Playing Song)
+-   [ ] Spotify API (Play Song from Approved Playlist)
 
 ## Installation
 -   Run `mix deps.get`
