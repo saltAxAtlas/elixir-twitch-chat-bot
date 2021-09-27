@@ -31,7 +31,7 @@ defmodule ConnectionHandler do
 
   def handle_continue(:get_dictionary, state) do
     dictionary =
-      File.read("dict.txt")
+      File.read("long_dict.txt")
       |> elem(1)
       |> String.split("\n", trim: true)
       |> Enum.map(fn x -> String.downcase(x) end)
@@ -207,7 +207,7 @@ defmodule ConnectionHandler do
 
   defp color_command(msg_list, channel, state) do
     ExIRC.Client.msg(state.client, :privmsg, channel, "/color #{msg_list |> List.last()}")
-    ExIRC.Client.msg(state.client, :privmsg, channel, "Color updated to: #{msg_list |> List.last()}")
+    ExIRC.Client.msg(state.client, :privmsg, channel, "color updated to: #{msg_list |> List.last()}")
     {:noreply, state}
   end
 
@@ -252,28 +252,28 @@ defmodule ConnectionHandler do
   defp help_command(msg_list, channel, state) do
     case Enum.at(msg_list, 1) do
       "help" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "...")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%help {command name}")
 
       "commands" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a list of commands")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%commands -> sends the command list")
 
       "say" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Says what you say")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%say {input} -> repeats `input`")
 
       "tgif" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a link to a trending gif")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%tgif -> sends link to a trending gif")
 
       "gif" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a link to a searched gif")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%gif {input} -> sends link to a gif relating to `input`")
 
       "wos" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Sends a list of words matching the character inputs")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "%wos {characters} {length} -> sends a list of words of {length} matching the {characters}")
 
       "color" ->
         ExIRC.Client.msg(state.client, :privmsg, channel, "%color {Blue, Coral, DodgerBlue, SpringGreen, YellowGreen, Green, OrangeRed, Red, GoldenRod, HotPink, CadetBlue, SeaGreen, Chocolate, BlueViolet, Firebrick}")
 
       nil ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "Format %help {command name}")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "Type `%help {command name}` to see how to use a specific command")
 
       _ ->
         ExIRC.Client.msg(state.client, :privmsg, channel, "Not a valid command")
