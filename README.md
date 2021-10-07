@@ -2,6 +2,9 @@
 A general purpose Twitch chat bot written in Elixir.
 
 ## TODO:
+-   [X] Command List
+-   [X] Help Command
+-   [X] Change Bot Color
 -   [X] Words on Stream Command
     - [ ] Account for Hidden Letters
     - [ ] Account for Fake Letters
@@ -13,18 +16,19 @@ A general purpose Twitch chat bot written in Elixir.
     - [ ] Remove Counter
     - [ ] Display Counter Value
 -   [ ] Dice Roll / Coin Flip
--   [ ] Auto Count `I'm New` Redemptions
--   [ ] Handle New Sub 
--   [ ] Handle Cheer
--   [ ] Handle New Follower
--   [ ] Handle `Skip Song` Redemption (PUBSUB + Spotify API)
--   [X] Command List
--   [X] Help Command
--   [X] Change Bot Color
--   [ ] Spotify API (Get Current Song) -> Streamlabs API (Update Playing Song)
--   [ ] Spotify API (Play Song from Approved Playlist)
+-   [ ] PubSub
+    -   [ ] Channel Point Redemptions
+        -   [ ] Auto Count `I'm New` Redemptions
+        -   [ ] VS Code Theme Changer
+        -   [ ] Handle `Skip Song` Redemption (Spotify API)
+    -   [ ] Handle Sub 
+    -   [ ] Handle Bits
+    -   [ ] Handle Follower
+-   [ ] Spotify API 
+    -   [ ] Get Current Song -> Update Playing Song (Streamlabs API)
+    -   [ ] Play Song from Approved Playlist
 
 ## Installation
--   Run `mix deps.get`
--   Replace information in `example_config.exs` -> Rename to `config.exs`
--   Run `iex -S mix`
+-   run `mix deps.get`
+-   replace information in `example_config.exs` -> rename to `config.exs`
+-   run `iex -S mix`
