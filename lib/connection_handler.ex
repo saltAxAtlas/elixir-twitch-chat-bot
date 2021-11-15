@@ -145,7 +145,7 @@ defmodule ConnectionHandler do
         help_command(msg_list, channel, state)
 
       "commands" ->
-        ExIRC.Client.msg(state.client, :privmsg, channel, "help, commands, say, tgif, wos, color")
+        ExIRC.Client.msg(state.client, :privmsg, channel, "help, commands, say, tgif, gif, wos, color, flip, roll")
 
       "say" ->
         ExIRC.Client.msg(
@@ -166,6 +166,12 @@ defmodule ConnectionHandler do
 
       "color" ->
         color_command(msg_list, channel, state)
+
+      "flip" ->
+        coin_flip_command(channel, state)
+
+      "roll" ->
+        dice_roll_command(msg_list, channel, state)
 
       _ ->
         {:noreply, state}
@@ -246,6 +252,29 @@ defmodule ConnectionHandler do
       |> List.first()
 
     ExIRC.Client.msg(state.client, :privmsg, channel, "#{output}")
+    {:noreply, state}
+  end
+
+  defp coin_flip_command(channel, state) do
+    ExIRC.Client.msg(
+      state.client,
+      :privmsg,
+      channel,
+      Enum.random(["Heads!", "Tails!"])
+    )
+    {:noreply, state}
+  end
+
+  defp dice_roll_command(msg_list, channel, state) do
+    n = msg_list |> Enum.drop(1) |> List.first()
+    if n == nil do
+      ExIRC.Client.msg(state.client, :privmsg, channel, :rand.uniform(6) |> Integer.to_string())
+    else
+      case Integer.parse(n) do
+        {n, _} -> ExIRC.Client.msg(state.client, :privmsg, channel, :rand.uniform(n) |> Integer.to_string())
+        _ -> ExIRC.Client.msg(state.client, :privmsg, channel, :rand.uniform(6) |> Integer.to_string())
+      end
+    end
     {:noreply, state}
   end
 
