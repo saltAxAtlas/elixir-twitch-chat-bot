@@ -15,7 +15,7 @@ A general purpose Twitch chat bot written in Elixir.
     - [ ] Add Counter
     - [ ] Remove Counter
     - [ ] Display Counter Value
--   [ ] Dice Roll / Coin Flip
+-   [X] Dice Roll / Coin Flip
 -   [ ] PubSub
     -   [ ] Channel Point Redemptions
         -   [ ] Auto Count `I'm New` Redemptions
